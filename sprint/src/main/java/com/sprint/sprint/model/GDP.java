@@ -6,8 +6,8 @@ public class GDP
 {
     private static final AtomicLong counter = new AtomicLong();
     private long id;
-    private static String country;
-    private static String gdp;
+    private String country;
+    private String gdp;
 
     public GDP(String country, String gdp)
     {
@@ -38,24 +38,24 @@ public class GDP
         this.id = id;
     }
 
-    public static String getCountry()
+    public String getCountry()
     {
         return country;
     }
 
-    public static void setCountry(String country)
+    public void setCountry(String country)
     {
-        GDP.country = country;
+        this.country = country;
     }
 
-    public static String getGdp()
+    public String getGdp()
     {
         return gdp;
     }
 
-    public static void setGdp(String gdp)
+    public void setGdp(String gdp)
     {
-        GDP.gdp = gdp;
+        this.gdp = gdp;
     }
 
     @Override
