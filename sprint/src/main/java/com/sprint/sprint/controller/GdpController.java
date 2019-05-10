@@ -2,6 +2,7 @@ package com.sprint.sprint.controller;
 
 import com.sprint.sprint.SprintApplication;
 import com.sprint.sprint.exception.ResourceNotFoundException;
+import com.sprint.sprint.gdpList;
 import com.sprint.sprint.model.GDP;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 @RestController
 @RequestMapping("/gdp")
@@ -24,6 +26,7 @@ public class GdpController {
     @GetMapping(value = "/names")
     public ResponseEntity<?> getAllNames()
     {
+        SprintApplication.ourGdpList.gdpList.sort((c1, c2) -> c1.getCountry().compareToIgnoreCase(c2.getCountry()));
         logger.info("Got all names");
         return new ResponseEntity<>(SprintApplication.ourGdpList, HttpStatus.OK);
     }
@@ -39,7 +42,7 @@ public class GdpController {
     @GetMapping(value = "/{countryName}")
     public ResponseEntity<?> getCountry(@PathVariable String countryName)
     {
-        ArrayList<GDP> rtnGDP = SprintApplication.ourGdpList.findGdps(g -> g.getCountry().toUpperCase().equals(countryName.toUpperCase()));
+        GDP rtnGDP = SprintApplication.ourGdpList.findGdp(g -> g.getCountry().toUpperCase().equals(countryName.toUpperCase()));
         return new ResponseEntity<>(rtnGDP, HttpStatus.OK);
     }
 
@@ -57,6 +60,12 @@ public class GdpController {
         return new ResponseEntity<>(rtnGDP, HttpStatus.OK);
     }
 
+    @GetMapping(value="/country/stats/median")
+    public ResponseEntity<?> getCountryMedian()
+    {
+        SprintApplication.ourGdpList.gdpList.sort((c1, c2) -> Integer.parseInt(c1.getGdp()) - Integer.parseInt(c2.getGdp()));
+        return new ResponseEntity<>(SprintApplication.ourGdpList.gdpList.get(SprintApplication.ourGdpList.gdpList.size() / 2), HttpStatus.OK);
+    }
     //Server side rendering
     @GetMapping(value ="/gdptable")
     public ModelAndView getRender()
