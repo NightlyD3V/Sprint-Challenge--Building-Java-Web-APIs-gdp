@@ -1,6 +1,7 @@
 package com.sprint.sprint.controller;
 
 import com.sprint.sprint.SprintApplication;
+import com.sprint.sprint.exception.ResourceNotFoundException;
 import com.sprint.sprint.model.GDP;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +46,14 @@ public class GdpController {
     @GetMapping(value ="/country/{id}")
     public ResponseEntity<?> getCountryById(@PathVariable int id)
     {
-        ArrayList<GDP> rtnGDP = SprintApplication.ourGdpList.findGdps(g -> g.getId() == id);
+        GDP rtnGDP;
+        if ((SprintApplication.ourGdpList.findGdp(g -> g.getId() == id)) == null)
+        {
+            throw new ResourceNotFoundException("Country with ID " + id + " not found");
+        } else
+        {
+            rtnGDP = SprintApplication.ourGdpList.findGdp(g -> g.getId() == id);
+        }
         return new ResponseEntity<>(rtnGDP, HttpStatus.OK);
     }
 
